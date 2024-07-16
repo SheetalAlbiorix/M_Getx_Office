@@ -8,6 +8,8 @@ import '../model/staff_model.dart';
 
 
 class OfficeDatabase {
+
+
   static final OfficeDatabase instance = OfficeDatabase._init();
 
   static Database? _database;
@@ -73,7 +75,6 @@ class OfficeDatabase {
 
     const orderBy = 'name ASC';
     final result = await db.query('offices', orderBy: orderBy);
-
     return result.map((json) => OfficeModel.fromMap(json)).toList();
   }
 

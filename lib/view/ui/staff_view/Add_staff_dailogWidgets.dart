@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:m_getx_office/utils/extensions/base_extensions.dart';
-
 import '../../../Controller/staff_controller.dart';
 import '../../../model/new_office_modle.dart';
 import '../../../model/staff_model.dart';
@@ -12,7 +11,6 @@ import '../../../utils/constants/base_assets.dart';
 import '../../../utils/constants/base_colors.dart';
 import '../../../utils/constants/base_strings.dart';
 import '../../../utils/functions/base_funcations.dart';
-import '../../../utils/helpers/key.dart';
 import '../../../utils/helpers/validators.dart';
 import '../../../utils/widgets/custom_button.dart';
 import '../../../utils/widgets/custom_textformfield.dart';
@@ -23,7 +21,7 @@ class AddStaffDialogWidget extends StatelessWidget {
 
   AddStaffDialogWidget({super.key, this.officeModel, this.staffModel});
 
-  final StaffController controller = Get.put(StaffController());
+ final StaffController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +65,7 @@ class AddStaffDialogWidget extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: 126.h,
+              height: 134.h,
               child: PageView(
                 controller: controller.pageController,
                 onPageChanged: (int page) {
@@ -169,7 +167,7 @@ class AddStaffDialogWidget extends StatelessWidget {
           )
               : CustomButton(
             labelText: BaseStrings.addstaffmember,
-            onPressed: () {
+            onPressed: ()  {
               if (controller.addStaffFormKey.currentState!.validate() &&
                   controller.selectedAvatarPath.value.isNotEmpty) {
                 final staff = StaffModel(
@@ -178,13 +176,15 @@ class AddStaffDialogWidget extends StatelessWidget {
                   avtar: controller.selectedAvatarPath.value,
                   officeId: int.parse((officeModel?.id ?? "").toString()),
                 );
-                // Use GetX to manage the state and add the staff member here.
-                Navigator.pop(context);
+             controller.addStaff(staffModel: staff);
+
               }
+              Navigator.of(context).pop();
             },
           );
         }),
       ],
     );
   }
+
 }

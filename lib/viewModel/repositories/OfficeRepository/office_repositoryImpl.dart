@@ -3,28 +3,28 @@ import '../../../services/Database_services.dart';
 import 'office_repository.dart';
 
 class OfficeRepositoryImpl implements OfficeRepository {
-  final OfficeDatabase? officeDatabase;
 
-  OfficeRepositoryImpl({this.officeDatabase});
+  OfficeRepositoryImpl();
+
 
   @override
   Future<OfficeModel?> createOffice(OfficeModel office) async {
-    return await officeDatabase?.create(office);
+    return await OfficeDatabase.instance.create(office);
   }
 
   @override
   Future<List<OfficeModel>?> getAllOfficesData() async {
-    return await officeDatabase?.readAllOffices();
+    return await OfficeDatabase.instance.readAllOffices();
   }
 
   @override
   Future<void> updateOffice(OfficeModel office) async {
-    await officeDatabase?.update(office);
+    await OfficeDatabase.instance.update(office);
   }
 
   @override
   Future<void> deleteOffice(int id) async {
-    await officeDatabase?.delete(id);
+    await OfficeDatabase.instance.delete(id);
   }
 
 

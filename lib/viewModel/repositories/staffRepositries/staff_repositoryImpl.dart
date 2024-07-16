@@ -4,12 +4,14 @@ import '../../../model/staff_model.dart';
 import '../../../services/Database_services.dart';
 
 class StaffRepositoryImPleMention implements StaffRepository {
-  final OfficeDatabase? officeDatabase;
 
-  StaffRepositoryImPleMention({this.officeDatabase});
+  StaffRepositoryImPleMention();
+
+  final OfficeDatabase officeDatabase = OfficeDatabase.instance;
+
   @override
   Future<StaffModel?> createStaff(StaffModel staff) async {
-    return await officeDatabase?.createStaff(staff);
+    return await officeDatabase.createStaff(staff);
   }
 
   @override
@@ -19,7 +21,7 @@ class StaffRepositoryImPleMention implements StaffRepository {
 
   @override
   Future<List<StaffModel>?> readAllStaffByOfficeId(int officeId) async {
-    return await officeDatabase?.readStaffByOffice(officeId);
+    return await officeDatabase.readStaffByOffice(officeId);
   }
 
   @override
