@@ -1,12 +1,9 @@
+import 'package:get/get.dart';
 import 'package:m_getx_office/viewModel/repositories/staffRepositries/staff_repository.dart';
-
 import '../../../model/staff_model.dart';
 import '../../../services/Database_services.dart';
 
 class StaffRepositoryImPleMention implements StaffRepository {
-
-  StaffRepositoryImPleMention();
-
   final OfficeDatabase officeDatabase = OfficeDatabase.instance;
 
   @override
@@ -15,19 +12,20 @@ class StaffRepositoryImPleMention implements StaffRepository {
   }
 
   @override
-  Future<List<StaffModel>?> readAllStaff() async {
-    return await officeDatabase?.readAllStaff();
-  }
-
-  @override
   Future<List<StaffModel>?> readAllStaffByOfficeId(int officeId) async {
-    return await officeDatabase.readStaffByOffice(officeId);
+    try {
+      final result = await officeDatabase.readStaffByOffice(officeId);
+      return result.map((json) => StaffModel.fromMap(json)).toList();
+    } catch (e) {
+     GetSnackBar(message : "Error reading staff by office ID: $e");
+      return null;
+    }
   }
 
   @override
   Future<bool> updateOfficeStaff(StaffModel staff) async {
     try {
-      await officeDatabase?.updateStaffByOffice(staff);
+      await officeDatabase.updateStaffByOffice(staff);
       return true;
     } catch (e) {
       return false;
@@ -36,7 +34,7 @@ class StaffRepositoryImPleMention implements StaffRepository {
 
   @override
   Future<void> deleteStaff(int id) async {
-    await officeDatabase?.deleteStaff(id);
+    await officeDatabase.deleteStaff(id);
   }
 
 }

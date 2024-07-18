@@ -65,17 +65,14 @@ class OfficeDatabase {
 
   Future<OfficeModel> create(OfficeModel office) async {
     final db = await instance.database;
-
     final id = await db.insert('offices', office.toMap());
     return office.copyWith(id: id);
   }
 
-  Future<List<OfficeModel>> readAllOffices() async {
+  Future<List<Map<String, dynamic>>> readAllOffices() async {
     final db = await instance.database;
-
     const orderBy = 'name ASC';
-    final result = await db.query('offices', orderBy: orderBy);
-    return result.map((json) => OfficeModel.fromMap(json)).toList();
+   return await db.query('offices', orderBy: orderBy);
   }
 
 
@@ -104,30 +101,17 @@ class OfficeDatabase {
   ///Staff DB
   Future<StaffModel> createStaff(StaffModel staff) async {
     final db = await instance.database;
-
     final id = await db.insert('staff', staff.toMap());
     return staff.copyWith(id: id);
   }
 
-  Future<List<StaffModel>> readAllStaff() async {
+  Future<List<Map<String, dynamic>>>  readStaffByOffice(int officeId) async {
     final db = await instance.database;
-
-    const orderBy = 'name ASC';
-    final result = await db.query('staff', orderBy: orderBy);
-
-    return result.map((json) => StaffModel.fromMap(json)).toList();
-  }
-
-  Future<List<StaffModel>> readStaffByOffice(int officeId) async {
-    final db = await instance.database;
-
-    final result = await db.query(
+    return await db.query(
       'staff',
       where: 'officeId = ?',
       whereArgs: [officeId],
     );
-
-    return result.map((json) => StaffModel.fromMap(json)).toList();
   }
 
   Future<void> updateStaffByOffice(StaffModel staff) async {
@@ -146,7 +130,6 @@ class OfficeDatabase {
   }
   Future close() async {
     final db = await instance.database;
-
     db.close();
   }
 }

@@ -4,9 +4,11 @@ class BaseStrings {
   static const String allOffices = "All Offices";
   static const String success = "Success";
   static const String search  = "Search";
+  static const String staffMembersInOffice  = "Staff Members in Office";
   static const String officeAddedSuccessfully = "Office added successfully!";
 
   static const String staffAddedSuccessfully = "Staff added successfully!";
+  static const String staffDeletedSuccessfully = "Staff Deleted successfully!";
   static const String officeUpdateSuccessfully = "Office updated successfully!";
 
   static const String staffUpdateSuccessfully = "Staff updated successfully!";

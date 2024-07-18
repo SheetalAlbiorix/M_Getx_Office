@@ -18,7 +18,7 @@ import '../../../utils/widgets/custom_textformfield.dart';
 
 class EditStaffDailowidgets extends StatefulWidget {
 
-  final  StaffModel? staffModel;
+   final  StaffModel? staffModel;
 
   const EditStaffDailowidgets({super.key,this.staffModel});
 
@@ -33,14 +33,17 @@ class EditStaffDailowidgetState extends State<EditStaffDailowidgets> {
   final StaffController staffController =  Get.find();
   @override
   void initState() {
-    if (widget.staffModel != null) {
-      staffController.firstNameContr.text = widget.staffModel?.name?.split(" ")[0] ?? "";
-      staffController.lastNameContr.text = widget.staffModel?.lastName ?? "";
-      staffController.selectedAvatarPath.value = widget.staffModel?.avtar ?? "";
+    WidgetsBinding.instance.addPostFrameCallback((_) {
 
-    }
-    super.initState();
-  }
+      if (widget.staffModel != null) {
+        staffController.firstNameContr.text =
+            widget.staffModel?.name?.split(" ")[0] ?? "";
+        staffController.lastNameContr.text = widget.staffModel?.lastName ?? "";
+        staffController.selectedAvatarPath.value =
+            widget.staffModel?.avtar ?? "";
+      }
+      super.initState();
+    });}
 
   final TextEditingController searchController = TextEditingController();
   final TextEditingController firstNameContr = TextEditingController();
@@ -201,15 +204,17 @@ class EditStaffDailowidgetState extends State<EditStaffDailowidgets> {
                 labelText: BaseStrings.updateStaffMember,
                 onPressed: () {
                   if (staffController.allKey.editStaffFormKey.currentState!.validate() &&
-                      selectedAvatarPath.isNotEmpty) {
+                      staffController.selectedAvatarPath.isNotEmpty) {
                     final staff = StaffModel(
                       id: int.parse((widget.staffModel?.id ??0).toString()),
-                      lastName: lastNameContr.text,
-                      name: firstNameContr.text,
-                      avtar: selectedAvatarPath,
+                      lastName: staffController.lastNameContr.text,
+                      name: staffController.firstNameContr.text,
+                      avtar: staffController.selectedAvatarPath.value,
                       officeId: int.parse((widget.staffModel?.officeId ?? "").toString()),
                     );
-                 staffController.updateStaff(staff);
+                 staffController.updateStaff(staff).then((value) => staffController.fetchStaff(officeId: (widget.staffModel?.officeId ?? 0),));
+staffController.staffList.refresh();
+
                     Navigator.pop(context);
                   }
                 }),
@@ -218,4 +223,11 @@ class EditStaffDailowidgetState extends State<EditStaffDailowidgets> {
       ),
     );
   }
+  @override
+  void dispose() {
+    staffController.pageController.dispose();
+    staffController.currentPage.value =0;
+        super.dispose();
+  }
+
 }

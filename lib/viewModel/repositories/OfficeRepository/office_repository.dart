@@ -7,5 +7,4 @@ abstract class OfficeRepository {
   Future<void> updateOffice(OfficeModel office);
   Future<void> deleteOffice(int id);
 
-
 }

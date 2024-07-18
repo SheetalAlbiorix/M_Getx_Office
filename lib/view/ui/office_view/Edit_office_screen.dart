@@ -36,12 +36,7 @@ class _EditOfficeScreenState extends State<EditOfficeScreen> {
   final FocusNode ofcmobilenumber = FocusNode();
   final FocusNode ofcCapacity = FocusNode();
 
-  void disposeController() {
-    officeController.ofcNameController.dispose();
-    officeController.phoneNumberController.dispose();
-    officeController.ofcEmailAddressController.dispose();
-    officeController.ofCapacityController.dispose();
-  }
+
 
   AllKey allKey = AllKey();
 
@@ -220,9 +215,4 @@ class _EditOfficeScreenState extends State<EditOfficeScreen> {
         ));
   }
 
-  @override
-  void dispose() {
-    disposeController();
-    super.dispose();
-  }
 }

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:m_getx_office/utils/extensions/base_extensions.dart';
-
 import '../../../Controller/office_controller.dart';
 import '../../../utils/constants/base_colors.dart';
 import '../../../utils/constants/base_strings.dart';
@@ -12,15 +12,13 @@ import '../../../utils/widgets/custom_appbar.dart';
 import '../../../utils/widgets/custom_button.dart';
 import '../../../utils/widgets/custom_textformfield.dart';
 
-
-
 class NewOfficeScreen extends StatelessWidget {
   final OfficeController controller = Get.find<OfficeController>();
-   NewOfficeScreen({super.key});
+
+  NewOfficeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: BaseColors.canvasColor,
       appBar: CustomAppBar(
@@ -37,13 +35,15 @@ class NewOfficeScreen extends StatelessWidget {
         automaticallyImplyLeading: true,
       ),
       body: Obx(
-            () => SingleChildScrollView(
+        () => SingleChildScrollView(
           child: Form(
             autovalidateMode: AutovalidateMode.onUserInteraction,
             key: controller.allKey.newOfficeFormKey,
             child: Column(
               children: [
                 CustomTextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.name,
                   focusNode: FocusNode(),
                   height: 48.h,
                   validator: validateOfficeName,
@@ -53,6 +53,8 @@ class NewOfficeScreen extends StatelessWidget {
                 ),
                 15.toVSB,
                 CustomTextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.streetAddress,
                   focusNode: FocusNode(),
                   validator: (val) => validateOfficeAddress(val),
                   labelText: BaseStrings.physicalAddress,
@@ -61,6 +63,8 @@ class NewOfficeScreen extends StatelessWidget {
                 ),
                 15.toVSB,
                 CustomTextFormField(
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.emailAddress,
                   focusNode: FocusNode(),
                   validator: (val) => validateEmail(val),
                   labelText: BaseStrings.EmailAdd,
@@ -69,6 +73,11 @@ class NewOfficeScreen extends StatelessWidget {
                 ),
                 15.toVSB,
                 CustomTextFormField(
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(10),
+                  ],
+
+                  keyboardType: TextInputType.number,
                   focusNode: FocusNode(),
                   validator: (val) => validatePhoneNumber(val),
                   labelText: BaseStrings.phoneNumber,
@@ -77,6 +86,11 @@ class NewOfficeScreen extends StatelessWidget {
                 ),
                 15.toVSB,
                 CustomTextFormField(
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(7),
+                  ],
+                   textInputAction: TextInputAction.done,
+                  keyboardType: TextInputType.phone,
                   focusNode: FocusNode(),
                   validator: (val) => validateOfficeCapacity(val),
                   labelText: BaseStrings.maximumCapacity,
@@ -92,9 +106,9 @@ class NewOfficeScreen extends StatelessWidget {
                         .textTheme
                         .titleMedium
                         ?.copyWith(
-                        color: BaseColors.blackColors,
-                        fontSize: 24.sp,
-                        fontWeight: FontWeight.w600),
+                            color: BaseColors.blackColors,
+                            fontSize: 24.sp,
+                            fontWeight: FontWeight.w600),
                   ),
                 ),
                 15.toVSB,
@@ -106,18 +120,20 @@ class NewOfficeScreen extends StatelessWidget {
                     children: [
                       Wrap(
                         alignment: WrapAlignment.center,
-                        spacing: 18,
-                        runSpacing: 15, // Vertical space between rows
+                        spacing: 11,
+                        runSpacing: 16,
                         children: List.generate(11, (index) {
                           return GestureDetector(
                             onTap: () {
-                              controller.selectColor(controller.colorList[index]);
+                              controller
+                                  .selectColor(controller.colorList[index]);
                             },
                             child: Container(
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 border: Border.all(
-                                  color: controller.selectedColor.value == controller.colorList[index]
+                                  color: controller.selectedColor.value ==
+                                          controller.colorList[index]
                                       ? BaseColors.selectColorBorder
                                       : Colors.transparent,
                                   width: 3.0,
@@ -126,8 +142,7 @@ class NewOfficeScreen extends StatelessWidget {
                               child: CircleAvatar(
                                   backgroundColor: controller.colorList[index],
                                   radius: 19.w,
-                                  child: null
-                              ),
+                                  child: null),
                             ),
                           );
                         }),
@@ -139,10 +154,10 @@ class NewOfficeScreen extends StatelessWidget {
                 CustomButton(
                   labelText: BaseStrings.addOffice.toUpperCase(),
                   onPressed: () {
-                    if(controller.allKey.newOfficeFormKey.currentState!.validate()){
+                    if (controller.allKey.newOfficeFormKey.currentState!
+                        .validate()) {
                       controller.addNewOffice();
                     }
-
                   },
                 ),
               ],

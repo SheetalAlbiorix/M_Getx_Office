@@ -1,3 +1,5 @@
+import 'package:m_getx_office/model/staff_model.dart';
+
 class OfficeModel {
   final int? id;
   final String name;
@@ -7,6 +9,8 @@ class OfficeModel {
   final int capacity;
   final String color;
 
+
+
   OfficeModel({
     this.id,
     required this.name,
@@ -15,6 +19,9 @@ class OfficeModel {
     required this.phoneNumber,
     required this.capacity,
     required this.color,
+
+
+
   });
 
   Map<String, dynamic> toMap() {
@@ -26,6 +33,7 @@ class OfficeModel {
       'phoneNumber': phoneNumber,
       'capacity': capacity,
       'color': color,
+
     };
   }
 
@@ -38,6 +46,7 @@ class OfficeModel {
       phoneNumber: map['phoneNumber'],
       capacity: map['capacity'],
       color: map['color'],
+
     );
   }
 

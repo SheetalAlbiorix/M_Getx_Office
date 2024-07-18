@@ -15,12 +15,17 @@ import '../../../utils/helpers/validators.dart';
 import '../../../utils/widgets/custom_button.dart';
 import '../../../utils/widgets/custom_textformfield.dart';
 
-class AddStaffDialogWidget extends StatelessWidget {
+class AddStaffDialogWidget extends StatefulWidget {
   final OfficeModel? officeModel;
   final StaffModel? staffModel;
 
   AddStaffDialogWidget({super.key, this.officeModel, this.staffModel});
 
+  @override
+  State<AddStaffDialogWidget> createState() => _AddStaffDialogWidgetState();
+}
+
+class _AddStaffDialogWidgetState extends State<AddStaffDialogWidget> {
  final StaffController controller = Get.find();
 
   @override
@@ -174,10 +179,9 @@ class AddStaffDialogWidget extends StatelessWidget {
                   lastName: controller.lastNameContr.text,
                   name: controller.firstNameContr.text,
                   avtar: controller.selectedAvatarPath.value,
-                  officeId: int.parse((officeModel?.id ?? "").toString()),
+                  officeId: int.parse((widget.officeModel?.id ?? "").toString()),
                 );
-             controller.addStaff(staffModel: staff);
-
+             controller.addStaff(staffModel: staff).then((value) => controller.fetchStaff(officeId: int.parse((widget.officeModel?.id ?? 0).toString())).toString(),);
               }
               Navigator.of(context).pop();
             },
@@ -186,5 +190,15 @@ class AddStaffDialogWidget extends StatelessWidget {
       ],
     );
   }
+  @override
+  void dispose() {
+    controller.firstNameContr.clear();
+    controller.lastNameContr.clear();
+    controller.pageController.dispose();
+    controller.currentPage.value =0;
+    super.dispose();
 
+
+
+  }
 }

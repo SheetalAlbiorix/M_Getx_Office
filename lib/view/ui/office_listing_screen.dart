@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:m_getx_office/Controller/staff_controller.dart';
 
 import 'package:m_getx_office/utils/extensions/base_extensions.dart';
 
@@ -25,6 +26,7 @@ class OfficeListingScreen extends StatefulWidget {
 
 class _OfficeListingScreenState extends State<OfficeListingScreen> {
   final OfficeController officeController = Get.find<OfficeController>();
+
 
 
   @override
@@ -126,9 +128,10 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                                       children: [
                                         GestureDetector(
                                           onTap: () {
-                                            Navigator.pushNamed(context,
+                                           Get.toNamed(
                                                 BaseRoute.officeViewScreen,
                                                 arguments: office);
+
                                           },
                                           child: Text(
                                             office.name,
@@ -162,7 +165,7 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                                         12.toHSB,
                                         Text.rich(TextSpan(
                                             text:
-                                            "${office.capacity.toString()}  ",
+                                            "${officeController.officeInStaff[office.id ?? 0].toString()}  ",
                                             style: TextStyle(
                                               fontSize: 12.sp,
                                               fontWeight: FontWeight.w700,
@@ -170,7 +173,7 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                                             children: <InlineSpan>[
                                               TextSpan(
                                                 text:
-                                                'Staff Members in Office',
+                                               BaseStrings.staffMemberInOffice,
                                                 style: TextStyle(
                                                     fontSize: 12.sp,
                                                     fontWeight:

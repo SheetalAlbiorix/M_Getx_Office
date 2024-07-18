@@ -19,11 +19,11 @@ class AppPages {
     GetPage(
       name: BaseRoute.officeViewScreen,
       page: () => OfficeViewScreen(officeModel: Get.arguments,),
-      transition: Transition.fadeIn,
+
     ),
     GetPage(
       name:  BaseRoute.officeScreen,
-      page: () => OfficeListingScreen(),
+      page: () => const OfficeListingScreen(),
       transition: Transition.fadeIn,
     ),
     GetPage(
