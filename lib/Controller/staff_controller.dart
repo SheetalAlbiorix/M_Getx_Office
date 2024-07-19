@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:m_getx_office/Controller/office_controller.dart';
 import 'package:m_getx_office/utils/helpers/key.dart';
 import 'package:m_getx_office/viewModel/repositories/staffRepositries/staff_repositoryImpl.dart';
 import '../model/staff_model.dart';
@@ -28,7 +29,7 @@ class StaffController extends GetxController {
   final GlobalKey<FormState> addStaffFormKey = GlobalKey<FormState>();
   final StaffRepositoryImPleMention staffRepository =
       StaffRepositoryImPleMention();
-  final
+  final OfficeController officeController =Get.find();
 
   RxList<StaffModel> staffList = <StaffModel>[].obs;
   RxList<StaffModel> filterStaffList = <StaffModel>[].obs;
@@ -80,7 +81,7 @@ class StaffController extends GetxController {
       Get.snackbar(BaseStrings.success, BaseStrings.staffAddedSuccessfully,
           snackPosition: SnackPosition.BOTTOM);
       clearData();
-
+      officeController.fetchOffices();
       currentPage.value = 0;
     } catch (e) {
       Get.snackbar('Error', 'Failed to add office: $e');

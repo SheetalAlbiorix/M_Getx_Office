@@ -40,6 +40,7 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
+      designSize: ScreenUtil.defaultSize,
       builder: (context, child) =>  Scaffold
         (
         backgroundColor: BaseColors.canvasColor,
@@ -78,20 +79,20 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
               if (officeController.isLoading.value) {
                 return const Center(child: CircularProgressIndicator());
               }
+              if (officeController.expanded.length != officeController.offices.length) {
+                officeController.expanded.value = List.filled(officeController.offices.length, false);
+              }
                 return officeController.offices.isNotEmpty ?
                 Expanded(
                   child: ListView.builder(
                     itemCount: officeController.offices.length,
                     itemBuilder: (context, index) {
                       final office = officeController.offices[index];
-                      final color =
-                      Color(int.parse(office.color.substring(6, 16)));
-                      return Obx(
-                          ()=> AnimatedContainer(
+                      return  AnimatedContainer(
                           decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(12)),
-                          height:  officeController.expanded[index] ? 270.h : 132.h,
+                          height:  officeController.expanded[index] ? 320.h : 132.h,
                           duration: const Duration(milliseconds: 300),
                           child: Stack(
                             children: [
@@ -100,15 +101,15 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                                 top: 0,
                                 bottom: 0,
                                 child: Container(
-                                  width: 10, // Adjust width as needed
+                                  width: 10,
                                   decoration: BoxDecoration(
                                     borderRadius: const BorderRadius.only(
                                         topLeft: Radius.circular(10),
                                         bottomLeft: Radius.circular(10)),
                                     gradient: LinearGradient(
                                       colors: [
-                                        color,
-                                        color.withOpacity(0.5),
+                                     Color(int.parse(office.color)),
+                                        Color(int.parse(office.color)).withOpacity(0.5)
                                       ],
                                       begin: Alignment.topLeft,
                                       end: Alignment.bottomRight,
@@ -157,7 +158,7 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                                         ),
                                       ],
                                     ),
-                                    11.toVSB,
+                                    10.toVSB,
                                     Row(
                                       children: <Widget>[
                                         SvgPicture.asset(
@@ -193,7 +194,7 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                                       height: 0.4.h,
                                       color: const Color(0xff0D4477),
                                     ),
-                                    11.toVSB,
+                                    10.toVSB,
                                     Row(
                                       mainAxisAlignment:
                                       MainAxisAlignment.center,
@@ -258,13 +259,12 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
                               ),
                             ],
                           ),
-                        ).paddingSymmetric(horizontal: 17, vertical: 10),
-                      );
+                        ).paddingSymmetric(horizontal: 17, vertical: 10);
+
                     },
                   ),
                 ):
                 const Center(child: Text('No Offices Found'));
-
             }),
           ],
         ),

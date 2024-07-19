@@ -19,7 +19,6 @@ class AppPages {
     GetPage(
       name: BaseRoute.officeViewScreen,
       page: () => OfficeViewScreen(officeModel: Get.arguments,),
-
     ),
     GetPage(
       name:  BaseRoute.officeScreen,

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:m_getx_office/Controller/office_controller.dart';
 import 'package:m_getx_office/utils/extensions/base_extensions.dart';
-
 import '../../../model/new_office_modle.dart';
 import '../../../utils/constants/base_colors.dart';
 import '../../../utils/constants/base_strings.dart';
@@ -42,16 +40,14 @@ class _EditOfficeScreenState extends State<EditOfficeScreen> {
 
   @override
   void initState() {
+
     if (widget.office != null) {
       officeController.ofcNameController.text = widget.office?.name ?? "";
       officeController.phoneNumberController.text = widget.office?.phoneNumber ?? "";
       officeController.ofCapacityController.text = widget.office?.capacity.toString() ?? "";
       officeController.ofcAddressController.text = widget.office?.address ?? "";
       officeController.ofcEmailAddressController.text = widget.office?.email ?? "";
-      String? colorString = widget.office?.color;
-      if (colorString != null) {
-        officeController.selectedColor.value = Color(int.parse(colorString.substring(6, 16)));
-      }
+      officeController.selectedColors.value = widget.office?.color;
     }
     super.initState();
   }
@@ -152,21 +148,21 @@ class _EditOfficeScreenState extends State<EditOfficeScreen> {
                           children: List.generate(11, (index) {
                             return GestureDetector(
                               onTap: () {
-                                officeController.selectColor(officeController.colorList[index]);
+                                officeController.selectedColors(officeController.colorLists[index].toString());
                               },
                               child: Container(
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   border: Border.all(
                                     color:
-                                    officeController.selectedColor ==  officeController.colorList[index]
+                                    officeController.selectedColors.value ==  officeController.colorLists[index]
                                         ? BaseColors.selectColorBorder
                                         : Colors.transparent,
                                     width: 3.0,
                                   ),
                                 ),
                                 child: CircleAvatar(
-                                    backgroundColor:  officeController.colorList[index],
+                                    backgroundColor:Color(int.parse(officeController.colorLists[index])),
                                     radius: 19.w,
                                     child: null),
                               ),
@@ -189,7 +185,7 @@ class _EditOfficeScreenState extends State<EditOfficeScreen> {
                               address:  officeController.ofcAddressController.text,
                               capacity: int.tryParse(
                                   officeController.ofCapacityController.text) ??
-                                  (widget.office?.capacity ?? 5),color:  officeController.selectedColor.toString());
+                                  (widget.office?.capacity ?? 5),color:  officeController.selectedColors.toString());
                           officeController.updateOffice(officeModel:updatedOffice);
                         }
                       }),

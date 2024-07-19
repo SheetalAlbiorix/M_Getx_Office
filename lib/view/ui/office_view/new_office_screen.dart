@@ -7,15 +7,24 @@ import '../../../Controller/office_controller.dart';
 import '../../../utils/constants/base_colors.dart';
 import '../../../utils/constants/base_strings.dart';
 import '../../../utils/functions/base_funcations.dart';
+import '../../../utils/helpers/key.dart';
 import '../../../utils/helpers/validators.dart';
 import '../../../utils/widgets/custom_appbar.dart';
 import '../../../utils/widgets/custom_button.dart';
 import '../../../utils/widgets/custom_textformfield.dart';
 
-class NewOfficeScreen extends StatelessWidget {
-  final OfficeController controller = Get.find<OfficeController>();
+class NewOfficeScreen extends StatefulWidget {
 
   NewOfficeScreen({super.key});
+
+  @override
+  State<NewOfficeScreen> createState() => _NewOfficeScreenState();
+}
+
+class _NewOfficeScreenState extends State<NewOfficeScreen> {
+  final OfficeController controller = Get.find<OfficeController>();
+
+  AllKey allKey = AllKey();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +47,7 @@ class NewOfficeScreen extends StatelessWidget {
         () => SingleChildScrollView(
           child: Form(
             autovalidateMode: AutovalidateMode.onUserInteraction,
-            key: controller.allKey.newOfficeFormKey,
+            key: allKey.newOfficeFormKey,
             child: Column(
               children: [
                 CustomTextFormField(
@@ -112,49 +121,49 @@ class NewOfficeScreen extends StatelessWidget {
                   ),
                 ),
                 15.toVSB,
-                SizedBox(
-                  width: (24.w * 10) * 6 - 11,
-                  // Width for 6 avatars + spacing
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: [
-                      Wrap(
-                        alignment: WrapAlignment.center,
-                        spacing: 11,
-                        runSpacing: 16,
-                        children: List.generate(11, (index) {
-                          return GestureDetector(
-                            onTap: () {
-                              controller
-                                  .selectColor(controller.colorList[index]);
-                            },
-                            child: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: controller.selectedColor.value ==
-                                          controller.colorList[index]
-                                      ? BaseColors.selectColorBorder
-                                      : Colors.transparent,
-                                  width: 3.0,
-                                ),
-                              ),
-                              child: CircleAvatar(
-                                  backgroundColor: controller.colorList[index],
-                                  radius: 19.w,
-                                  child: null),
+            SizedBox(
+              width: (24.w * 10) * 6 - 11, // Width for 6 avatars + spacing
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 11,
+                    runSpacing: 16,
+                    children: List.generate(11, (index) {
+                      return GestureDetector(
+                        onTap: () {
+                          controller.selectColors(  controller.colorLists[index]);
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: controller.selectedColors.value ==
+                                  controller.colorLists[index]
+                                  ? BaseColors.selectColorBorder
+                                  : Colors.transparent,
+                              width: 3.0,
                             ),
-                          );
-                        }),
-                      ),
-                    ],
+                          ),
+                          child: CircleAvatar(
+                            backgroundColor: Color(int.parse(controller.colorLists[index])),
+                            radius: 19.w,
+                            child: null,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
-                ),
+                ],
+              ),
+            ),
                 20.toVSB,
                 CustomButton(
                   labelText: BaseStrings.addOffice.toUpperCase(),
                   onPressed: () {
-                    if (controller.allKey.newOfficeFormKey.currentState!
+                    FocusManager.instance.primaryFocus?.unfocus();
+                    if (allKey.newOfficeFormKey.currentState!
                         .validate()) {
                       controller.addNewOffice();
                     }

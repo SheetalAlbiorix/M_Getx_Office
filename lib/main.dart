@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:m_getx_office/Controller/staff_controller.dart';
 import 'package:m_getx_office/routes/pages.dart';
@@ -33,9 +34,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  GetMaterialApp( getPages: AppPages.pages,
+      builder: (context, child) {
+        return const ScreenUtilInit(minTextAdapt: true,
+          designSize: Size(375, 812),child:  OfficeListingScreen());
+      },
+
       initialRoute: BaseRoute.officeScreen,
       debugShowCheckedModeBanner: false,
-      home: OfficeListingScreen()
+      home: const OfficeListingScreen()
     );
   }
 }

@@ -1,14 +1,11 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:m_getx_office/Controller/office_controller.dart';
 import 'package:m_getx_office/Controller/staff_controller.dart';
 import 'package:m_getx_office/utils/extensions/base_extensions.dart';
 import 'package:m_getx_office/view/ui/staff_view/Add_staff_dailogWidgets.dart';
 import 'package:m_getx_office/view/ui/staff_view/Edit_staff_dailoWidgets.dart';
-
 import '../../model/new_office_modle.dart';
 import '../../model/staff_model.dart';
 import '../../routes/routes.dart';
@@ -16,7 +13,6 @@ import '../../utils/constants/base_assets.dart';
 import '../../utils/constants/base_colors.dart';
 import '../../utils/constants/base_strings.dart';
 import '../../utils/functions/base_funcations.dart';
-import '../../utils/helpers/key.dart';
 import '../../utils/widgets/custom_appbar.dart';
 import '../../utils/widgets/custom_button.dart';
 import '../../utils/widgets/custom_textformfield.dart';
@@ -45,13 +41,12 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      fetchStaff();
+       fetchStaff();
     });
     super.initState();
   }
 
   Future<void> fetchStaff() async {
-    staffController.staffList.clear();
     await staffController.fetchStaff(
       officeId: widget.officeModel?.id ?? 0,
     );
@@ -59,7 +54,7 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final color = Color(int.parse(widget.officeModel!.color.substring(6, 16)));
+    final color = Color(int.parse(widget.officeModel!.color));
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
       floatingActionButton: Padding(
@@ -94,7 +89,7 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
         customLeading: IconButton(onPressed: (){
           Navigator.of(context).pop();
 
-        }, icon: Icon(Icons.arrow_back)),
+        }, icon: const Icon(Icons.arrow_back)),
         automaticallyImplyLeading: false,
         centerTitle: true,
         customTitle: Text(
@@ -105,14 +100,13 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
               ?.copyWith(fontWeight: FontWeight.w500),
         ),
       ),
-
       body: Column(
         children: [
           Obx(
             () => AnimatedContainer(
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              height: staffController.expanded == true ? 270.h : 132.h,
+              height: staffController.expanded.value == true ? 270.h : 132.h,
               duration: const Duration(milliseconds: 300),
               child: Stack(
                 children: [
