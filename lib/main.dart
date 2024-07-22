@@ -34,10 +34,6 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return  GetMaterialApp( getPages: AppPages.pages,
-      builder: (context, child) {
-        return const ScreenUtilInit(minTextAdapt: true,
-          designSize: Size(375, 812),child:  OfficeListingScreen());
-      },
 
       initialRoute: BaseRoute.officeScreen,
       debugShowCheckedModeBanner: false,
