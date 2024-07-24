@@ -41,18 +41,30 @@ String? validateOfficeCapacity(String? value) {
   if (value == null || value.isEmpty) {
     return "Office capacity is required";
   }
-  int? capacity = int.tryParse(value);
+
+  // Check for leading zeros
+  if (value.startsWith('0') && value.length > 1) {
+    return "Office capacity must not start with 0 ";
+  }
+
+  final int? capacity = int.tryParse(value);
+
   if (capacity == null) {
     return "Office capacity must be a valid number";
   }
+
   if (capacity <= 5) {
-    return "Office capacity must be a 5 member";
+    return "Office capacity must be more than 5 members";
   }
+
   if (capacity > 1000) { // Adjust this limit as needed
     return "Office capacity must not exceed 1000";
   }
-  return null;
+
+  return null; // indicates the value is valid
 }
+
+
 
 String? validatePhoneNumber(String? value) {
   if (value == null || value.isEmpty) {

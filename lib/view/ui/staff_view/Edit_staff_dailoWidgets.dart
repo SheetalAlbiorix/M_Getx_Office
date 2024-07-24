@@ -106,6 +106,7 @@ class EditStaffDailowidgetState extends State<EditStaffDailowidgets> {
                 SizedBox(
                   height: 136.h,
                   child: PageView(
+                    physics: const NeverScrollableScrollPhysics(),
                     controller: staffController.pageController,
                     onPageChanged: (int page) {
 
@@ -143,7 +144,6 @@ class EditStaffDailowidgetState extends State<EditStaffDailowidgets> {
                               return GestureDetector(
                                 onTap: () {
                                   staffController.selectedAvatarPath(staffController.avatarList[index]);
-
                                 },
                                 child: CircleAvatar(
                                   radius: 24.w,
@@ -214,7 +214,6 @@ class EditStaffDailowidgetState extends State<EditStaffDailowidgets> {
                     );
                  staffController.updateStaff(staff).then((value) => staffController.fetchStaff(officeId: (widget.staffModel?.officeId ?? 0),));
 staffController.staffList.refresh();
-
                     Navigator.pop(context);
                   }
                 }),

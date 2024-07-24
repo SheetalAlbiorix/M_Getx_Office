@@ -3,9 +3,14 @@ class BaseStrings {
   static const String interRegular = 'InterRegular';
   static const String allOffices = "All Offices";
   static const String success = "Success";
+  static const String error = "Error";
+  static const String message = "Message";
   static const String search  = "Search";
   static const String staffMembersInOffice  = "Staff Members in Office";
+  static const String pleaseSelectAnAvatar  = "Please select an avatar.";
   static const String officeAddedSuccessfully = "Office added successfully!";
+
+
 
   static const String staffAddedSuccessfully = "Staff added successfully!";
   static const String staffDeletedSuccessfully = "Staff Deleted successfully!";

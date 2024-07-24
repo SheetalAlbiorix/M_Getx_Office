@@ -24,21 +24,57 @@ Future<void> main() async {
  Get.put(OfficeController(officeRepository:  Get.find<OfficeRepository>(),staffRepository:  Get.find<StaffRepository>()));
  Get.put(StaffController());
 
-  runApp(const MyApp());
+ runApp(ScreenUtilInit( builder: (context, child) =>
+       const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-    return  GetMaterialApp( getPages: AppPages.pages,
-
+    return GetMaterialApp(
+      getPages: AppPages.pages,
       initialRoute: BaseRoute.officeScreen,
       debugShowCheckedModeBanner: false,
-      home: const OfficeListingScreen()
+      home:  const OfficeListingScreenWithExitPrompt()
     );
   }
 }
 
+class OfficeListingScreenWithExitPrompt extends StatelessWidget {
+  const OfficeListingScreenWithExitPrompt({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        bool shouldExit = await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('Exit App'),
+              content: const Text('Are you sure you want to exit the app?'),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Cancel'),
+                  onPressed: () {
+                    Navigator.of(context).pop(false);
+                  },
+                ),
+                TextButton(
+                  child: const Text('Exit'),
+                  onPressed: () {
+                    Navigator.of(context).pop(true);
+                  },
+                ),
+              ],
+            );
+          },
+        );
+        return shouldExit;
+      },
+      child: const OfficeListingScreen(),
+    );
+  }
+}

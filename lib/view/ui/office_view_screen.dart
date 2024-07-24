@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_elastic_list_view/flutter_elastic_list_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -32,9 +33,7 @@ class OfficeViewScreen extends StatefulWidget {
 
 class _OfficeViewScreenState extends State<OfficeViewScreen> {
   final StaffController staffController = Get.find();
-
   final TextEditingController searchController = TextEditingController();
-
   final PageController pageController = PageController(initialPage: 0);
   int currentPage = 0;
 
@@ -57,7 +56,8 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
     final color = Color(int.parse(widget.officeModel!.color));
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-      floatingActionButton: Padding(
+      floatingActionButton:
+      Padding(
         padding: const EdgeInsets.all(24.0),
         child: FloatingActionButton(
           shape: RoundedRectangleBorder(
@@ -65,6 +65,7 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
           ),
           backgroundColor: const Color(0xff0D4477),
           onPressed: () {
+            staffController.staffList.length  < (widget.officeModel?.capacity ?? 0) ?
             showDialog(
               barrierDismissible: false,
               context: context,
@@ -80,7 +81,8 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
                           color: ""),
                 );
               },
-            );
+            ) : Get.snackbar(BaseStrings.message, "Office capacity must be ${widget.officeModel?.capacity} Member",
+                snackPosition: SnackPosition.BOTTOM);
           },
           child: SvgPicture.asset(BaseAssets.addIcon),
         ),
@@ -88,7 +90,6 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
       appBar: CustomAppBar(
         customLeading: IconButton(onPressed: (){
           Navigator.of(context).pop();
-
         }, icon: const Icon(Icons.arrow_back)),
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -106,7 +107,7 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
             () => AnimatedContainer(
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(12)),
-              height: staffController.expanded.value == true ? 270.h : 132.h,
+              height: staffController.expanded.value == true ? 250.h : 132.h,
               duration: const Duration(milliseconds: 300),
               child: Stack(
                 children: [
@@ -130,9 +131,9 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
                           ],
                           stops: const [
                             0.0,
-                            0.33, // Step 1
-                            0.66, // Step 2
-                            1.0, // End of gradient
+                            0.33,
+                            0.66,
+                            1.0,
                           ],
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
@@ -287,12 +288,14 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
                 BaseStrings.staffMemberInOffice,
                 style: getTheme(context: context).textTheme.titleLarge,
               ),
-              Text(
-                (staffController.staffList.length).toString(),
-                style: getTheme(context: context)
-                    .textTheme
-                    .headlineSmall
-                    ?.copyWith(fontSize: 18.sp),
+              Obx(
+    ()=> Text(
+                  (staffController.staffList.length).toString(),
+                  style: getTheme(context: context)
+                      .textTheme
+                      .headlineSmall
+                      ?.copyWith(fontSize: 18.sp),
+                ),
               )
             ],
           ).paddingOnly(left: 12, right: 24),
@@ -305,7 +308,8 @@ class _OfficeViewScreenState extends State<OfficeViewScreen> {
                       strokeWidth: 5,
                     ))
                   : staffController.filterStaffList.isNotEmpty && searchController.text.trim().isNotEmpty
-                      ? ListView.builder(
+                      ?
+              ElasticListView.builder(
                           itemCount: staffController.filterStaffList.length,
                           itemBuilder: (context, index) {
                             final staff =

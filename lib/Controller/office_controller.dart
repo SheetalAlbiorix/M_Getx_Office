@@ -1,21 +1,24 @@
 import 'dart:ui';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_rx/get_rx.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:m_getx_office/utils/constants/base_strings.dart';
+import 'package:path/path.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../model/new_office_modle.dart';
 import '../routes/routes.dart';
 import '../viewModel/repositories/OfficeRepository/office_repository.dart';
 import '../viewModel/repositories/staffRepositries/staff_repository.dart';
+import 'package:url_launcher/url_launcher.dart' as UL;
 
 class OfficeController extends GetxController {
   final OfficeRepository officeRepository;
   final StaffRepository? staffRepository;
 
   OfficeController({required this.officeRepository, this.staffRepository});
-
-
 
   List<String> colorLists = [
     '0xffFFBE0B',
@@ -31,17 +34,20 @@ class OfficeController extends GetxController {
     '0xff8338EC',
   ];
 
-
-
   var officeInStaff = <int, int>{}.obs;
+
   var expanded = <bool>[].obs;
   var selectedColor = Rxn<Color>();
   var selectedColors = Rxn<String>();
   var offices = <OfficeModel>[].obs;
   var isLoading = false.obs;
+  var tutorialCoachIsDone = false.obs;
   var errorMessage = ''.obs;
+  final RxBool startAnimation = false.obs;
 
+  TutorialCoachMark? tutorialCoachMark;
 
+  double screenWidth =0;
 
   final ofcNameController = TextEditingController();
   final ofcAddressController = TextEditingController();
@@ -55,13 +61,13 @@ class OfficeController extends GetxController {
     ofcEmailAddressController.clear();
     phoneNumberController.clear();
     ofCapacityController.clear();
-    selectedColors.value ='';
+    selectedColors.value = '';
   }
-
 
   void selectColors(String colorHex) {
     selectedColors.value = colorHex;
   }
+
   Future<void> addNewOffice() async {
     if (ofcNameController.text.isNotEmpty &&
         ofcAddressController.text.isNotEmpty &&
@@ -76,7 +82,6 @@ class OfficeController extends GetxController {
         phoneNumber: phoneNumberController.text.trim(),
         capacity: int.parse(ofCapacityController.text.trim()),
         color: selectedColors.value.toString(),
-        // color: selectedColor.toString().substring(6,16),
       );
       try {
         await officeRepository.createOffice(office).then(
@@ -84,7 +89,8 @@ class OfficeController extends GetxController {
             );
         Get.snackbar(BaseStrings.success, BaseStrings.officeAddedSuccessfully,
             snackPosition: SnackPosition.BOTTOM);
-        Get.toNamed(BaseRoute.officeScreen);
+        Navigator.of(Get.context!).pushNamedAndRemoveUntil(
+            BaseRoute.officeScreen, (Route<dynamic> route) => false);
         onClearFiled();
       } catch (e) {
         Get.snackbar('Error', 'Failed to add office: $e');
@@ -101,6 +107,7 @@ class OfficeController extends GetxController {
       var fetchedOffices = await officeRepository.getAllOfficesData();
       expanded = List<bool>.filled(offices.length, false).obs;
       if (fetchedOffices != null) {
+        await Future.delayed(const Duration(milliseconds: 300)); // Delay between each item
         offices(fetchedOffices);
       }
       for (var office in offices) {
@@ -125,7 +132,8 @@ class OfficeController extends GetxController {
       await officeRepository.updateOffice(officeModel);
       Get.snackbar(BaseStrings.success, BaseStrings.officeUpdateSuccessfully,
           snackPosition: SnackPosition.BOTTOM);
-      Get.toNamed(BaseRoute.officeScreen);
+      Navigator.of(Get.context!).pushNamedAndRemoveUntil(
+          BaseRoute.officeScreen, (Route<dynamic> route) => false);
       onClearFiled();
     } catch (e) {
       Get.snackbar('Error', 'Failed to add office: $e');
@@ -137,10 +145,35 @@ class OfficeController extends GetxController {
       await officeRepository.deleteOffice(id);
       Get.snackbar(BaseStrings.success, BaseStrings.officeUpdateSuccessfully,
           snackPosition: SnackPosition.BOTTOM);
-      Get.toNamed(BaseRoute.officeScreen);
+      Navigator.of(Get.context!).pushNamedAndRemoveUntil(
+          BaseRoute.officeScreen, (Route<dynamic> route) => false);
       onClearFiled();
     } catch (e) {
-      Get.snackbar('Error', "Failed to delete office. $e");
+      Get.snackbar(BaseStrings.error, e.toString());
+    }
+  }
+
+  makingPhoneCall(String phoneNumber) async {
+    var url = Uri.parse("tel:$phoneNumber");
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  void makingGmailID(String mailId) async {
+    final Uri params = Uri(
+      scheme: 'mailto',
+      path: mailId,
+    );
+    String  url = params.toString();
+    if (await  canLaunchUrl( Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      print( 'Could not launch $url');
     }
   }
 }
+
+

@@ -16,8 +16,8 @@ Widget customIconWithText(String icon, String text, BuildContext context) {
         child: Text(
           maxLines: 2,
           text.replaceFirstMapped(
-          RegExp(r"(\d{3})(\d{3})(\d{3})(\d)"),
-          (Match m) => "${m[1]} ${m[2]} ${m[3]}0"
+          RegExp(r"(\d{3})(\d{3})(\d{3})"),
+          (Match m) => "${m[1]} ${m[2]} ${m[3]}"
   ),
           style: getTheme(context: context).textTheme.titleMedium?.copyWith(
               color: BaseColors.allOfficeTextColor,

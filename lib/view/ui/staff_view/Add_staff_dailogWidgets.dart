@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:get/get_navigation/get_navigation.dart';
+import 'package:m_getx_office/utils/enums/enums.dart';
 import 'package:m_getx_office/utils/extensions/base_extensions.dart';
 import '../../../Controller/staff_controller.dart';
 import '../../../model/new_office_modle.dart';
@@ -70,8 +72,9 @@ class _AddStaffDialogWidgetState extends State<AddStaffDialogWidget> {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(
-              height: 134.h,
+              height: 141.h,
               child: PageView(
+                physics: const NeverScrollableScrollPhysics(),
                 controller: controller.pageController,
                 onPageChanged: (int page) {
                   controller.currentPage.value = page;
@@ -173,17 +176,22 @@ class _AddStaffDialogWidgetState extends State<AddStaffDialogWidget> {
               : CustomButton(
             labelText: BaseStrings.addstaffmember,
             onPressed: ()  {
-              if (controller.addStaffFormKey.currentState!.validate() &&
-                  controller.selectedAvatarPath.value.isNotEmpty) {
-                final staff = StaffModel(
-                  lastName: controller.lastNameContr.text,
-                  name: controller.firstNameContr.text,
-                  avtar: controller.selectedAvatarPath.value,
-                  officeId: int.parse((widget.officeModel?.id ?? "").toString()),
-                );
-             controller.addStaff(staffModel: staff).then((value) => controller.fetchStaff(officeId: int.parse((widget.officeModel?.id ?? 0).toString())).toString(),);
+              if (controller.addStaffFormKey.currentState!.validate()) {
+                if(   controller.selectedAvatarPath.value.isNotEmpty){
+                  final staff = StaffModel(
+                    lastName: controller.lastNameContr.text,
+                    name: controller.firstNameContr.text,
+                    avtar: controller.selectedAvatarPath.value,
+                    officeId: int.parse((widget.officeModel?.id ?? "").toString()),
+                  );
+                  controller.addStaff(staffModel: staff).then((value) => controller.fetchStaff(officeId: int.parse((widget.officeModel?.id ?? 0).toString())).toString(),);
+                  Navigator.of(context).pop();
+                }
+               else{
+                   Get.snackbar("Error",BaseStrings.pleaseSelectAnAvatar,snackPosition: SnackPosition.BOTTOM);
+                }
               }
-              Navigator.of(context).pop();
+
             },
           );
         }),
