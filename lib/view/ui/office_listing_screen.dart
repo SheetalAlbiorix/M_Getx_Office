@@ -37,7 +37,10 @@ class _OfficeListingScreenState extends State<OfficeListingScreen> {
       if (!officeController.startAnimation.value) {
         await officeController.fetchOffices();
         Future.delayed(const Duration(milliseconds: 300), () {
-          officeController.startAnimation.value = true;
+          setState(() {
+            officeController.startAnimation.value = true;
+          });
+
         });
 
         showTutorialIsDone();

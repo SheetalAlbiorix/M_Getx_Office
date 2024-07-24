@@ -103,6 +103,7 @@ class OfficeController extends GetxController {
 
   Future<void> fetchOffices() async {
     try {
+      startAnimation(false);
       isLoading(true);
       var fetchedOffices = await officeRepository.getAllOfficesData();
       expanded = List<bool>.filled(offices.length, false).obs;
